@@ -10,6 +10,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import * as courseActions from '../../actions/courseActions';
+import { bindActionCreators } from 'redux';
 
 class CoursesPage extends React.Component {
     constructor(props, context) {
@@ -33,7 +34,7 @@ class CoursesPage extends React.Component {
 
     onClickSave() {
         //alert(`Saving ${this.state.course.title}`);
-        this.props.createCourse(this.state.course);
+        this.props.actions.createCourse(this.state.course);
     }
     courseRow(course, index) {
         return <div key={index}>{course.title}</div>;
@@ -64,7 +65,8 @@ class CoursesPage extends React.Component {
 // 3. use bindActionCreators which binds your action creators in dispatch calls for you. return { actions: bindActionCreators(actions, dispatch)}. then in the component call this.props.actions.loadCourses();
 function mapDispatchToProps(dispatch) {
     return {
-        createCourse: course => dispatch(courseActions.createCourse(course))
+        // bindActionCreators will go to courseActions and find all the actions in that file, wrap them and call dispatch.
+        actions: bindActionCreators(courseActions, dispatch)
     };
 }
 
@@ -72,7 +74,7 @@ function mapDispatchToProps(dispatch) {
 CoursesPage.propTypes = {
     //dispatch: PropTypes.func.isRequired,
     courses: PropTypes.array.isRequired,
-    createCourse: PropTypes.func.isRequired
+    actions: PropTypes.object.isRequired
 };
 
 // what part of the Redux store(state) you want to expose to your component as props
