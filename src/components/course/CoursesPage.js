@@ -33,7 +33,7 @@ class CoursesPage extends React.Component {
 
     onClickSave() {
         //alert(`Saving ${this.state.course.title}`);
-        this.props.dispatch(courseActions.createCourse(this.state.course));
+        this.props.createCourse(this.state.course);
     }
     courseRow(course, index) {
         return <div key={index}>{course.title}</div>;
@@ -62,15 +62,17 @@ class CoursesPage extends React.Component {
 // 1. ignore it. then you can manually dispatch action in your component. (this.props.dispatch(loadCourses()))
 // 2. create a wrapper to dispatch action. function mapDispatchToProps(dispatch) { return { loadCourses: () => {dispatch(loadCourses())}}}. then in your component call this.props.loadCourses(); this method is recommended.
 // 3. use bindActionCreators which binds your action creators in dispatch calls for you. return { actions: bindActionCreators(actions, dispatch)}. then in the component call this.props.actions.loadCourses();
-/*
 function mapDispatchToProps(dispatch) {
-
+    return {
+        createCourse: course => dispatch(courseActions.createCourse(course))
+    };
 }
-*/
+
 
 CoursesPage.propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    courses: PropTypes.array.isRequired
+    //dispatch: PropTypes.func.isRequired,
+    courses: PropTypes.array.isRequired,
+    createCourse: PropTypes.func.isRequired
 };
 
 // what part of the Redux store(state) you want to expose to your component as props
@@ -85,4 +87,4 @@ function mapStateToProps(state, ownProps) {
 
 //export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
 // if I omit mapDispatchToProps, connect will attach "dispatch" to the component automatically. 
-export default connect(mapStateToProps)(CoursesPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
